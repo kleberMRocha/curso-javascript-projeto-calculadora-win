@@ -14,13 +14,7 @@ body {
     width: 322px;
     height: 100%;
     padding: 6px;
-}
-
-#calculadoraWhite {
-    background-color:#e0e0e0;
-    width: 322px;
-    height: 100%;
-    padding: 6px;
+   
 }
 
 #calculadora .btn {
@@ -129,16 +123,20 @@ header {
  }
 
  .hide{
+    opacity: 0;
     transform: translate3d(0px, -200px, 0)
 }
 
  .slideDown{
+    opacity: 1;
     animation-name: slideDown;
     animation-duration: 1s;
     transform: translate3d(0px, 0, 0);
  }
 
  .slideUp{
+    opacity: 0;
+    transition: 2s;
     animation-name: slideUp;
     animation-duration: 1s;
     transform: translate3d(0px, -200px, 0);
