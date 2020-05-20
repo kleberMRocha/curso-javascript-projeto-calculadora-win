@@ -6,19 +6,50 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Calculadora</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" media="screen" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://kit.fontawesome.com/703a4c0f87.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
     
     <div class="center">
+        
+        <div data-others="content">
+
+             <div class="row mb-2">
+                <div class="" >
+                    <button type="button" data-others="menu" class="btn btn-others col-sm"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="" >
+                    <button type="button" data-others="viewMode" class="btn btn-others col-sm hide"><i class="far fa-lightbulb"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="" >
+                    <button type="button" data-others="sound" class="btn btn-others col-sm hide"> <i class="fas fa-volume-up"></i></button>
+                </div>
+            </div>
+            
+        </div>
+        
+
         <div id="calculadora">
+            <div>
+                <div class="row">
+                    <div class="col mg-12">
+                        <span data-display="lastOperation"> - </span>
+                    </div>
+                </div>
+            </div>
             <header>
-                <span data-display="lastOperation"> - </span>
                 <span data-display="error"> </span>
                 <div id="display">0</div>
             </header>
             <section class="container">
+              
                 <div class="row">
                     <button type="button" data-btn="percent" class="btn btn-others col-sm">%</button>
                     <button type="button" data-btn="sqrt" class="btn btn-others col-sm">√</button>
@@ -57,6 +88,8 @@
                 </div>
             </section>
         </div>
+
+       
     </div>
     <script src="./js/models/models.js"></script>
     <script src="./js/controller/controller.js"></script>

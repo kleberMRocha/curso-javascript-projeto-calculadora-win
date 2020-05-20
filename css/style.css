@@ -1,5 +1,6 @@
 body {
-    background-color:#535353;
+    background-color:#1a1a1a;
+    font-family: 'Oswald', sans-serif;
 }
 .center {
     position: absolute;
@@ -9,23 +10,33 @@ body {
     
 }
 #calculadora {
-    background-color: #B1B1B1;
+    background-color:#3d3d3d;
     width: 322px;
-    height: 500px;
+    height: 100%;
     padding: 6px;
 }
+
+#calculadoraWhite {
+    background-color:#e0e0e0;
+    width: 322px;
+    height: 100%;
+    padding: 6px;
+}
+
 #calculadora .btn {
     margin: 2px;
     border-radius: 0;
     min-height: 44px;
     outline: none;
     box-shadow: none;
+    background-color: #1a1a1a;
+    color:#cfcfcf;
 }
 #calculadora .btn:hover {
-    background-color: #BCBCBC;
+    background-color:  #575757;
 }
 #calculadora .btn:active {
-    background-color: #909090;
+    background-color: #0c0c0c;
 }
 header {
     height: 205px;
@@ -34,7 +45,7 @@ header {
     position: relative;
 }
 #display {
-    color: #000;
+    color: white;
     text-align: right;
     position: absolute;
     bottom: 0;
@@ -46,23 +57,28 @@ header {
     overflow: hidden;
     
 }
+
+
+
 [data-display="lastOperation"]{
-   
-    margin-left: right;
-    display: block;
-    font-size: 12px;
-    color: #0a1631;
-    background-color: #c2c2c2;
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    border: 1px solid #cfcfcf;
+    color: white;
 }
 
 [data-display="error"]{
     position:absolute;
     width: 100%;
     margin-top: 160px;
-    margin-left: right;
+    font-weight: lighter;
     display: block;
-    font-size: 12px;
-    color: #a51010;
+    font-size: 15px;
+    color: #000000;
+    text-align: center;
     background-color: #c2c2c2;
 }
 
@@ -78,4 +94,70 @@ header {
     padding-top: 0;
     padding-bottom: 0;
     font-size: 20px;
+   
 }
+
+[data-others="content"]{
+    position: absolute;
+    flex-wrap: wrap-reverse;
+    width: 50px;
+    left: -12%;
+
+}
+
+[data-others="sound"]{
+   font-size: 18px;
+   color: white;
+   background-color: #686868;
+   
+}
+
+[data-others="viewMode"]{
+    font-size: 20px;
+    padding: 0 15px;
+    color: white;
+    background-color: #686868;
+ 
+ }
+
+ [data-others="menu"]{
+    font-size: 20px;
+    padding: 0 13px;
+    color: white;
+    background-color: #686868;
+ 
+ }
+
+ .hide{
+    transform: translate3d(0px, -200px, 0)
+}
+
+ .slideDown{
+    animation-name: slideDown;
+    animation-duration: 1s;
+    transform: translate3d(0px, 0, 0);
+ }
+
+ .slideUp{
+    animation-name: slideUp;
+    animation-duration: 1s;
+    transform: translate3d(0px, -200px, 0);
+ }
+
+
+
+ @keyframes slideDown {
+    from {transform: translate3d(0px, -200px, 0);}
+    to {transform: translate3d(0px, 0, 0)}
+  }
+
+  @keyframes slideUp {
+    from {transform: translate3d(0px, 0px, 0);}
+    to {transform: translate3d(0px, -200px, 0)}
+  }
+
+ 
+
+
+
+

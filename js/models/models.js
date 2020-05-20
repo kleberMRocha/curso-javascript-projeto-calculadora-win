@@ -1,6 +1,7 @@
 class Calc{
-    constructor(display,btns,lastOperationDisplay,displayError){
-
+    constructor(display,btns,lastOperationDisplay,displayError,audio,sideMenu){
+        //keyBoardEventListener
+        this.keyboard();
         this.btns = btns;
         this.display = display;
         this.displayError = displayError;
@@ -8,9 +9,13 @@ class Calc{
         this.addEventClick(this.btns);
         this.lastOperationDisplay = lastOperationDisplay;
         this.lastOperation =[];
+        this.audio = audio;
+        this.sideMenu = sideMenu;
+        this.sideMenuFunctions(sideMenu);
         this.regex = [/\,/gm,/\./gm,/\/100\*/gm,/[\/*-+%]/gm];
-       
+     
     }
+
 
     get displayContent(){
         return this._displayContent;
@@ -21,15 +26,108 @@ class Calc{
         this._displayContent = value;
     }
 
+    //Bonus Functions
+    sideMenuFunctions(value){
+
+        value.forEach(element =>{
+            
+            element.addEventListener("click",()=>{
+
+                switch (element.dataset.others) {
+                    case "menu":
+
+                        if(element.children[0].classList == "fas fa-bars"){
+
+                           element.children[0].classList ="fas fa-window-close";
+
+                           value.forEach(element =>{
+                              
+                            if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
+                                   return;
+                               }else{
+                                   
+                                setTimeout(()=>{
+                                    element.classList.add('slideDown');
+                                    element.classList.remove('slideUp');
+                                },200);
+                                
+                               }
+                           });
+
+
+                        }else{
+
+                            element.children[0].classList ="fas fa-bars";
+                            value.forEach(element =>{
+                                if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
+                                    return;
+                                }else{
+                                    
+                                    setTimeout(()=>{
+                                        element.classList.remove('slideDown');
+                                    
+                                    },200);
+
+                                    element.classList.add('slideUp');                        
+
+ 
+                                }
+                            });
+
+                        }
+                        break;
+
+                    case "sound":
+                        if(element.children[0].classList == "fas fa-volume-up"){
+                            this.audio.muted = true;
+                            element.children[0].classList = "fas fa-volume-mute";
+                            this.setMsg("Som Mutado!");
+                        }else{
+                            element.children[0].classList = "fas fa-volume-up";
+                            this.audio.muted = false;
+                            this.setMsg("som Habilitado!");
+                        }
+  
+                    break;
+                    case "viewMode":  
+                    if(element.children[0].classList == "far fa-lightbulb"){
+                      
+                        element.children[0].classList = "fas fa-lightbulb";
+                        document.body.style ="background-color:#fcfcfc;"
+
+                  
+                    }else{
+                        element.children[0].classList = "far fa-lightbulb";
+                        document.body.style ="";
+
+                       
+                    }
+                        
+
+                    break;
+                
+                    default:
+                        break;
+                }
+    
+            });
+
+        });
+     
+
+    }
+
     //add "click" event for all buttons
        addEventClick(value){
 
         value.forEach(element => {
 
             element.addEventListener("click",event =>{
-
+                this.audio.play();
+                this.audio.currentTime=0;
+                
                 this.isAnumber(this.lastOperation,this.displayContent,element.dataset.btn);
-                this.maxLengthDisplay(this.display.textContent,this.displayError);
+                this.maxLengthDisplay(this.display);
               
 
                 switch (element.dataset.btn) {
@@ -80,11 +178,12 @@ class Calc{
 
                         break;
                     case "=": //eval the values on the display
-
+                    this.audio.play();
                         this.equationSolver();   
                         break;
                 
                     default: //resolves the operation and shown on the display
+
                         this._displayContent.push(element.innerHTML);
                         this.setDisplayContent();
                         break;
@@ -105,33 +204,39 @@ class Calc{
             this.lastOperation.shift();
         }
 
-        this.lastOperation.push(this.display.innerHTML);
+        try {
 
-        let resultado = eval(this.display.innerHTML.replace(this.regex[0],".")
-        .replace("%","/100*"));
+            this.lastOperation.push(this.display.innerHTML);
 
-        this.setDisplayLastOperation(this.lastOperationDisplay,this.lastOperation,resultado);
-        this.resetDisplay();
-        
-        this._displayContent.push(String(resultado).replace(this.regex[1],","));
+            let resultado = eval(this.display.innerHTML.replace(this.regex[0],".")
+            .replace("%","/100*"));
+    
+            this.setDisplayLastOperation(this.lastOperationDisplay,this.lastOperation,resultado);
+            this.resetDisplay();
+            
+            this._displayContent.push(String(resultado).replace(this.regex[1],","));
+    
+            this.setDisplayContent();
+            
+        } catch (error) {
 
-        this.setDisplayContent();
+           this.setMsg("Operação invalida!");
+        }
+
 
     }
 
     //add it to the display without array commas
     setDisplayContent(){
-
-        if(this.displayContent.includes("NaN"))this.resetDisplay(),this.displayError.innerHTML = "Operação Invalida!";
+        if(this.displayContent.includes("NaN"))this.setMsg("Operação Invalida!");
         this.display.innerHTML = this.displayContent.join("").replace(this.regex[2],"%");
         
     }
 
     //add  the last operation to the display 
     setDisplayLastOperation(lastOperationDisplay,lastOperation,resultado){
-
         lastOperationDisplay.innerHTML = 
-        `Resultado: ${lastOperation[lastOperation.length-1]} = ${resultado}`;
+        ` ${lastOperation[lastOperation.length-1]} = ${resultado}`;
     }
 
     //reset display and set a default value
@@ -190,7 +295,6 @@ class Calc{
         }
     }
 
-
     LastArrayValue(array){
 
        return array[array.length -1]
@@ -198,23 +302,24 @@ class Calc{
     }
 
     //check max display length
-    maxLengthDisplay(value,displayError){
+    maxLengthDisplay(value){
     
-       if(value.length > 41){
-        displayError.innerHTML = "Numero maximo de caracteres excedido!"
-        this.resetDisplay();
-        this.resetLastOperation();
-        setTimeout(()=>{
-            this.resetDisplay();
-        },30);
-      
-       }else{
-        displayError.innerHTML = "";
+       if(value.textContent.length > 42){
+
+        let fontSize = 30 - value.textContent.length/15;
+           
+        for(let i =value.textContent.length -1; i < value.textContent.length; i++){
+
+            value.style =`font-size:${fontSize}px;`;
+
+        }
+
+        }else{
+        value.style ="";
        }
 
     }
 
- 
     //CE Button
     ceFun(displayContent){
 
@@ -229,7 +334,6 @@ class Calc{
 
     }
 
-   
     // ± Button
     NewSign(display,displayContent,regex){
 
@@ -278,9 +382,8 @@ class Calc{
        let displayValue = display.split(/[\//*-+%]/gm);
        if(this.LastArrayValue(displayValue) == 0){
         
-        this.displayError.innerHTML = "Operação Invalida!";
-        this.resetDisplay();
-        
+       this.setMsg("Operação Invalida!");
+
        }
 
        let pushValue = 1/(this.LastArrayValue(displayValue).replace(regex[0],"."));
@@ -288,9 +391,7 @@ class Calc{
        this.applyFunction(display,displayContent,regex,pushValue);
                    
      }
-
-
-    
+  
     applyFunction(display,displayContent,regex,pushValue){
 
         //transforms the display value into an array
@@ -327,6 +428,40 @@ class Calc{
 
 
 
+    }
+
+    setMsg(msg){
+        this.displayError.innerHTML = msg;
+        this.display.innerHTML = 0;
+        setTimeout(()=>{ this.displayError.innerHTML =""},1000);
+        setTimeout(()=>{ this.resetDisplay();},1);
+
+    }
+
+    keyboard(){
+        document.addEventListener('keypress', (event)=>{
+
+            console.log(event.key);
+
+          
+            if((/[-+*\/%\,\.\d+]/gm.test(event.key)== true)){
+                this.maxLengthDisplay(this.display);
+                this.displayContent.push(event.key);
+                this.setDisplayContent();
+                console.log(this.displayContent);
+
+            }else if(event.key =="Enter"){
+                this.equationSolver();
+
+            }else if(event.key =="Delete"){
+                this.ceFun(this.displayContent,this.display);
+
+            }   
+            else{
+                console.log(222);
+            }
+               
+        });
     }
 
     
