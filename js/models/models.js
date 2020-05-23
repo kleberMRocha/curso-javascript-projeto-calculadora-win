@@ -441,24 +441,25 @@ class Calc{
     keyboard(){
         document.addEventListener('keypress', (event)=>{
 
-            console.log(event.key);
-
-          
             if((/[-+*\/%\,\.\d+]/gm.test(event.key)== true)){
                 this.maxLengthDisplay(this.display);
                 this.displayContent.push(event.key);
+                this.audio.play();
+                this.audio.currentTime=0;
                 this.setDisplayContent();
-                console.log(this.displayContent);
 
             }else if(event.key =="Enter"){
                 this.equationSolver();
+                this.audio.play();
+                this.audio.currentTime=0;
 
             }else if(event.key =="Delete"){
                 this.ceFun(this.displayContent,this.display);
-
+                this.audio.play();
+                this.audio.currentTime=0;
             }   
             else{
-                console.log(222);
+                return;
             }
                
         });
