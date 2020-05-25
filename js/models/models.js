@@ -12,7 +12,7 @@ class Calc{
         this.audio = audio;
         this.sideMenu = sideMenu;
         this.sideMenuFunctions(sideMenu);
-        this.regex = [/\,/gm,/\./gm,/\/100\*/gm,/[\/*-+%]/gm,/([-+]?[0-9]*[\.,]?[0-9]+[\/\+\-\*\%])+([-+]?[0-9]*\.?[0-9]+)/gm];
+        this.regex = [/\,/gm,/\./gm,/\/100\*/gm,/[\/*-+%]/gm,/.+[Infinity,NaN,undefined].+/gmi];
      
     }
 
@@ -28,37 +28,41 @@ class Calc{
 
     //Bonus Functions
     sideMenuFunctions(value){
-
         value.forEach(element =>{
             element.addEventListener("click",()=>{
-                switch (element.dataset.others) {
+                switch (element.dataset.others){
                     case "menu":
-                        if(element.children[0].classList == "fas fa-bars"){
-                           element.children[0].classList ="fas fa-window-close";
-                           value.forEach(element =>{  
-                                if(element.dataset.others == "menu" || element.dataset.others == "content"){
-                                    return;
-                                    }else{  
-                                        setTimeout(()=>{
+                            if(element.children[0].classList == "fas fa-bars"){
+                            element.children[0].classList ="fas fa-window-close";
+
+                            value.forEach(element =>{  
+
+                                    if(element.dataset.others == "menu" || 
+                                       element.dataset.others == "content"){return;}
+                                    else{  
+                                       setTimeout(()=>{
                                             element.classList.add('slideDown');
                                             element.classList.remove('slideUp');
                                         },200);
-                                    }
-                                });
-                                }else{
+                                        }
+                                    });
+                                }
+                            else{
+
                                 element.children[0].classList ="fas fa-bars";
+
                                 value.forEach(element =>{
-                                    if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
-                                        return;
-                                    }else{
+                                    if(element.dataset.others == "menu" || 
+                                    element.dataset.others ==  "content"){return;}
+                                    else{
                                         setTimeout(()=>{
                                             element.classList.remove('slideDown');
-                                        },200);
-                                        element.classList.add('slideUp');                       
-                                    }
-                            });
+                                            },200);
 
-                        }
+                                            element.classList.add('slideUp');                       
+                                        }
+                                });
+                            }
                         
                         break;
 
@@ -88,7 +92,6 @@ class Calc{
                     default:
                         break;
                 }
-    
             });
 
         });
@@ -182,9 +185,6 @@ class Calc{
             this.lastOperation.shift();
         }
         
-        // Preval of invalid operations
-        this.regex[4].test(this.display.innerHTML) || this.setMsg("Operação invalida!");
-        
         try {
 
             this.lastOperation.push(this.display.innerHTML);
@@ -202,6 +202,7 @@ class Calc{
         } catch (error) {
 
            this.setMsg("Operação invalida!");
+           
         }
 
 
@@ -287,7 +288,7 @@ class Calc{
     
        if(value.textContent.length > 42){
 
-        let fontSize = 30 - value.textContent.length/15;
+            let fontSize = 30 - value.textContent.length/15;
            
         for(let i =value.textContent.length -1; i < value.textContent.length; i++){
 
@@ -296,7 +297,7 @@ class Calc{
         }
 
         }else{
-        value.style ="";
+            value.style ="";
        }
 
     }
@@ -312,7 +313,6 @@ class Calc{
          display.innerHTML = 0;
         }
 
-
     }
 
     // ± Button
@@ -324,7 +324,6 @@ class Calc{
 
         this.applyFunction(display,displayContent,regex,pushValue);
               
-      
     }
 
     // √ Button
@@ -336,10 +335,7 @@ class Calc{
        let pushValue = Math.sqrt(this.LastArrayValue(displayValue).replace(regex[0],".")).toFixed(2);
 
        this.applyFunction(display,displayContent,regex,pushValue);
-
-      
-                      
-                    
+                                 
     }
 
     //pow Button
@@ -363,13 +359,13 @@ class Calc{
        let displayValue = display.split(/[\//*-+%]/gm);
        if(this.LastArrayValue(displayValue) == 0){
         
-       this.setMsg("Operação Invalida!");
+        this.setMsg("Operação Invalida!");
 
        }
 
-       let pushValue = 1/(this.LastArrayValue(displayValue).replace(regex[0],"."));
+        let pushValue = 1/(this.LastArrayValue(displayValue).replace(regex[0],"."));
 
-       this.applyFunction(display,displayContent,regex,pushValue);
+        this.applyFunction(display,displayContent,regex,pushValue);
                    
      }
   
@@ -421,8 +417,12 @@ class Calc{
 
     keyboard(){
         document.addEventListener('keypress', (event)=>{
-
+        
             if((/[-+*\/%\,\.\d+]/gm.test(event.key)== true)){
+                /[-+*\/%\,\.]/.test(event.key) ? 
+                this.isAnumber(this.lastOperation,this.displayContent,"operador"):
+                this.isAnumber(this.lastOperation,this.displayContent,"number");
+
                 this.maxLengthDisplay(this.display);
                 this.displayContent.push(event.key);
                 this.audio.play();
