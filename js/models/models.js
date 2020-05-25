@@ -30,51 +30,36 @@ class Calc{
     sideMenuFunctions(value){
 
         value.forEach(element =>{
-            
             element.addEventListener("click",()=>{
-
                 switch (element.dataset.others) {
                     case "menu":
-
                         if(element.children[0].classList == "fas fa-bars"){
-
                            element.children[0].classList ="fas fa-window-close";
-
-                           value.forEach(element =>{
-                              
-                            if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
-                                   return;
-                               }else{
-                                   
-                                setTimeout(()=>{
-                                    element.classList.add('slideDown');
-                                    element.classList.remove('slideUp');
-                                },200);
-                                
-                               }
-                           });
-
-
-                        }else{
-
-                            element.children[0].classList ="fas fa-bars";
-                            value.forEach(element =>{
-                                if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
+                           value.forEach(element =>{  
+                                if(element.dataset.others == "menu" || element.dataset.others == "content"){
                                     return;
+                                    }else{  
+                                        setTimeout(()=>{
+                                            element.classList.add('slideDown');
+                                            element.classList.remove('slideUp');
+                                        },200);
+                                    }
+                                });
                                 }else{
-                                    
-                                    setTimeout(()=>{
-                                        element.classList.remove('slideDown');
-                                    
-                                    },200);
-
-                                    element.classList.add('slideUp');                        
-
- 
-                                }
+                                element.children[0].classList ="fas fa-bars";
+                                value.forEach(element =>{
+                                    if(element.dataset.others == "menu" || element.dataset.others ==  "content"){
+                                        return;
+                                    }else{
+                                        setTimeout(()=>{
+                                            element.classList.remove('slideDown');
+                                        },200);
+                                        element.classList.add('slideUp');                       
+                                    }
                             });
 
                         }
+                        
                         break;
 
                     case "sound":
@@ -85,26 +70,20 @@ class Calc{
                         }else{
                             element.children[0].classList = "fas fa-volume-up";
                             this.audio.muted = false;
-                            this.setMsg("som Habilitado!");
+                            this.setMsg("Som Habilitado!");
                         }
   
-                    break;
+                        break;
                     case "viewMode":  
                     if(element.children[0].classList == "far fa-lightbulb"){
-                      
-                        element.children[0].classList = "fas fa-lightbulb";
-                        document.body.style ="background-color:#fcfcfc;"
+                            element.children[0].classList = "fas fa-lightbulb";
+                            document.body.style ="background-color:#fcfcfc;"
 
-                  
                     }else{
-                        element.children[0].classList = "far fa-lightbulb";
-                        document.body.style ="";
-
-                       
+                            element.children[0].classList = "far fa-lightbulb";
+                            document.body.style ="";
                     }
-                        
-
-                    break;
+                        break;
                 
                     default:
                         break;
@@ -113,7 +92,6 @@ class Calc{
             });
 
         });
-     
 
     }
 
