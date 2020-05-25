@@ -12,7 +12,7 @@ class Calc{
         this.audio = audio;
         this.sideMenu = sideMenu;
         this.sideMenuFunctions(sideMenu);
-        this.regex = [/\,/gm,/\./gm,/\/100\*/gm,/[\/*-+%]/gm];
+        this.regex = [/\,/gm,/\./gm,/\/100\*/gm,/[\/*-+%]/gm,/([-+]?[0-9]*[\.,]?[0-9]+[\/\+\-\*\%])+([-+]?[0-9]*\.?[0-9]+)/gm];
      
     }
 
@@ -203,7 +203,10 @@ class Calc{
         if(this.lastOperation.length > 0){
             this.lastOperation.shift();
         }
-
+        
+        // Preval of invalid operations
+        this.regex[4].test(this.display.innerHTML) || this.setMsg("Operação invalida!");
+        
         try {
 
             this.lastOperation.push(this.display.innerHTML);
