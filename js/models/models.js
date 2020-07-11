@@ -430,9 +430,10 @@ class Calc{
                 this.setDisplayContent();
 
             }else if(event.key =="Enter"){
-                this.equationSolver();
                 this.audio.play();
                 this.audio.currentTime=0;
+                this.equationSolver();
+                return;
 
             }else if(event.key =="Delete"){
                 this.ceFun(this.displayContent,this.display);
